@@ -178,7 +178,3 @@ output "container_port" { value = 8080 }
 </script>
 
 ---
-
-Se desejar uma experiência realmente executável (rodar `terraform validate`/`apply` pelo navegador), abra o repositório no Codespaces (link acima). Lá você terá um ambiente onde o `terraform` e o `docker` podem ser executados.
-
-Se quiser, eu já configuro o workflow/Pages para publicar esta página automaticamente — quer que eu faça isso agora? (Obs.: já existe um workflow no repositório que pode publicar `docs/`.)
