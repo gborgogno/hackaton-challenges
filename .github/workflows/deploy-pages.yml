@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+# Explicit permissions so the GITHUB_TOKEN can push to `gh-pages`.
+permissions:
+  contents: write
+  pages: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -17,3 +22,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./hackaton-challenges/docs
+          publish_branch: gh-pages
+          # create the branch if it does not exist
+          allow_empty_commit: true
