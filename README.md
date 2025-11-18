@@ -95,6 +95,25 @@ terraform destroy -auto-approve
 
 ---
 
+## Critérios de sucesso
+
+Para considerar o desafio completo, verifique os seguintes pontos:
+
+- **Terraform apply:** `terraform apply -auto-approve` executa sem erros.
+- **Container criado:** existe um container Docker com o nome `nginx_hackaton` (ver `docker ps`).
+- **Nginx acessível:** o Nginx responde em `http://localhost:PORTA` (por padrão `8080`, ou conforme definido em `variables.tf`).
+- **Logs válidos:** `docker logs nginx_hackaton` não mostra erros críticos (server boot OK).
+- **Destruição limpa:** `terraform destroy -auto-approve` remove todos os recursos sem erros.
+
+Dica: execute os comandos abaixo para checar rapidamente:
+
+```bash
+docker ps --filter "name=nginx_hackaton"
+curl -fsS http://localhost:8080 || echo "Nginx não respondeu"
+terraform destroy -auto-approve
+```
+
+
 ## Executando no Codespaces (opcional)
 
 Se você preferir usar GitHub Codespaces, crie um Codespace a partir deste repositório e execute os mesmos comandos listados acima no terminal do Codespace. Garanta que o Codespace tenha acesso ao daemon Docker (socket montado ou DinD) para que os containers possam ser criados.
