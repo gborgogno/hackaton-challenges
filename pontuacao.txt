@@ -1,0 +1,38 @@
+Pontuação do Desafio — Avaliação por questão
+Data: 2025-11-18
+
+Resumo: cada uma das 5 questões vale 20 pontos (5 × 20 = 100). Há um bônus opcional descrito no final (+10).
+
+Q1 — `variables.tf` (20 pts)
+- Objetivo: declarar `variable "container_port"` com tipo coerente (preferível `number`) e default utilizável.
+- Critério para 20 pts: `type = number` e `default = 8080` (ou, se `type = string`, default entre aspas e explicado). `terraform validate` deve passar.
+- Avaliação atual (arquivos na raiz): 0 / 20 — `variables.tf` não atende ao critério (tipo/valor inconsistente).
+
+Q2 — `main.tf` (20 pts)
+- Objetivo: corrigir atributos errados (`nome` → `name`), usar `image = docker_image.nginx_image.name` e não referenciar outputs dentro de blocos de recursos; usar `restart = "..."` quando apropriado.
+- Critério para 20 pts: recurso `docker_container` usa atributos corretos e `terraform validate` passa.
+- Avaliação atual (arquivos na raiz): 0 / 20 — `main.tf` contém atributos e referências intencionalmente incorretas.
+
+Q3 — `outputs.tf` (20 pts)
+- Objetivo: expor a variável `container_port` corretamente: `output "container_port" { value = var.container_port }`.
+- Critério para 20 pts: output usa o nome exato da variável e `terraform validate` passa.
+- Avaliação atual (arquivos na raiz): 0 / 20 — `outputs.tf` referencia `var.containerPort` (casing mismatch).
+
+Q4 — `providers.tf` (20 pts)
+- Objetivo: declarar `required_providers` e `provider "docker"` com `host = "unix:///var/run/docker.sock"` quando o ambiente usa o socket do host.
+- Critério para 20 pts: `terraform init` reconhece o provider; provider block aponta para o socket correto para o ambiente alvo.
+- Avaliação atual (arquivos na raiz): 0 / 20 — o `provider` configurado contém um caminho de socket incorreto (typo).
+
+Q5 — Restart policy / comportamento (20 pts)
+- Objetivo: aplicar política de reinício correta (ex.: `restart = "on-failure"` ou `restart = "always"`) e documentar como verificar localmente.
+- Critério para 20 pts: `main.tf` define a política correta e documentação mostra o teste (`docker ps`, `docker logs`, simular falha).
+- Avaliação atual (arquivos na raiz): 0 / 20 — política de restart está definida com atributo incorreto (`restart_policy`) e não há instrução de teste.
+
+Pontuação final (soma Q1–Q5): 0 / 100
+
+Bônus opcional (até +10 pts)
+- Healthcheck básico (ex.: null_resource + local-exec que faz curl e falha se não 200): até +5 pts.
+- Proteção da solução (instruções ou configuração para não expor solução em ramo principal: branch privada, git-crypt, sops, etc.): até +5 pts.
+- Estado atual dos bônus: 0 / 10.
+
+
