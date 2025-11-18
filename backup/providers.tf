@@ -1,3 +1,7 @@
+provider "docker" {
+  host = "unix:///var/run/docker.sock"
+}
+
 terraform {
   required_providers {
     docker = {
@@ -5,7 +9,4 @@ terraform {
       version = ">= 3.0"
     }
   }
-}
-provider "docker" {
-  host = "unix:///var/run/dockers.sock"
 }

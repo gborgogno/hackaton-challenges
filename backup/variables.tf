@@ -1,5 +1,5 @@
 variable "container_port" {
   description = "Host port to map Nginx to"
-  type        = string
-  default     = "8080" 
+  type        = number
+  default     = 8080
 }
