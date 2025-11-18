@@ -1,4 +1,4 @@
-# 🛠️ Desafio de Debug: Infraestrutura como Código Quebrada (Terraform + Docker)
+# 🛠️ Desafio de Debug: Infraestrutura como Código  (Terraform + Docker)
 
 ## 🚨 O Desafio
 
@@ -24,6 +24,28 @@ O Terraform é conhecido por ser rigoroso. A missão da sua equipe é identifica
 4.  **Verificação Final:** Quando o `terraform plan` não retornar erros e mostrar a adição dos dois recursos (imagem e contêiner), execute o comando final:
     * `terraform apply -auto-approve`
 
+## 🚀 Executando no GitHub Codespaces (recomendado)
+
+Este repositório inclui uma configuração de Dev Container que instala o `terraform` e prepara um ambiente com Docker-in-Docker para que você possa provisionar o desafio diretamente no Codespace.
+
+Passos:
+
+1. No GitHub, abra este repositório e clique em **Code → Codespaces → New codespace**.
+2. Aguarde a criação do Codespace. O devcontainer usará as features `docker-in-docker` e `terraform`.
+3. Quando o Codespace estiver pronto, abra o terminal integrado e execute (ou aguarde o `postCreateCommand` que já dispara):
+
+```bash
+cd hackaton-challenges
+./provision.sh
+```
+
+O script `provision.sh` executa `terraform init`, `terraform validate`, `terraform plan` e tenta aplicar o plano. Se preferir, rode os comandos Terraform manualmente.
+
+Observações importantes:
+
+- O Dev Container foi configurado com `runArgs: ["--privileged"]` para permitir o funcionamento do Docker-in-Docker. Se o seu ambiente Codespaces/organizacao não permitir contêineres privilegiados, a criação de containers poderá falhar — nesse caso execute os passos localmente em uma máquina com Docker instalado ou forneça um `PERSONAL_TOKEN` para o workflow de Pages.
+- Se precisar apenas da página da tarefa (GitHub Pages), veja `hackaton-challenges/docs/index.md`.
+
 ## ✅ Critério de Sucesso
 
 O desafio será considerado **completo** quando:
@@ -32,54 +54,3 @@ O desafio será considerado **completo** quando:
 2.  Um contêiner chamado `nginx_hackaton` estiver rodando no seu ambiente Docker.
 3.  O Nginx for acessível no seu navegador via `http://localhost:[PORTA_CORRETA]`.
 4.  O comando `terraform destroy` remover todos os recursos sem erro.
-
----
-# 🐛 O Código Quebrado (main.tf)
-
-## COPIE E COLE ESTE CÓDIGO NO main.tf PARA COMEÇAR A DEPURAÇÃO!
-
-```terraform
-terrafom {
-  required_providers {
-    # Erro 1: Nome do provedor na source
-    docker-provider = {
-      source = "hashicorp/docker"
-      version = "~> 3.0"
-    }
-  }
-}
-
-# Erro 2: Bloco provider mal definido
-prowider "docker" {}
-
-# Recurso 1: Puxar Imagem Docker
-resource "docker_image" "nginx_image" {
-  name         = "nginx:latest"
-  keep_local = false # Erro 3: Typo no atributo
-}
-
-# Recurso 2: Criar Contêiner Docker
-resource "docker_container" "nginx_hackathon" {
-  image = docker_image.nginx_image.id
-
-  # Erro 4: Typo no nome do recurso (deveria ser "nginx_hackathon")
-  nome  = "nginx_hackaton" 
-  
-  ports {
-    internal = 80
-    
-    # Erro 5: Variável de output usada como atributo de porta
-    external = output.container_port.value 
-  }
-  
-  # Erro 6: Bloco restart_policy é inexistente, deveria ser restart
-  restart_policy "always" 
-}
-
-# Recurso 3: Output (Saída de dados)
-output "container_port" {
-  description = "A porta externa que o Nginx está rodando"
-  
-  # Erro 7: Referência incorreta ao recurso e atributo
-  value       = docker_container.nginx_hackaton.ports.0.public_port
-}
